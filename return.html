@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>คืนของ - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"/>
+  <style>
+    /* (ใช้ CSS แบบเดิม) */
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    /* เอฟเฟกต์ขอบไฟนีออน */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 20px);
+      top: 10px;
+      left: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+      animation: neon-border 4s linear infinite;
+    }
+
+    body::after {
+      border-color: #00ffff;
+      animation-delay: 2s;
+      filter: drop-shadow(0 0 10px #00ffff);
+    }
+
+    body::before {
+      border-color: #ff00cc;
+      filter: drop-shadow(0 0 10px #ff00cc);
+    }
+
+    @keyframes neon-border {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* เมนู */
+    .top-menu {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background-color: #3a2f4d;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .top-menu a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: 0.3s ease;
+    }
+
+    .top-menu a:hover {
+      text-shadow: 0 0 5px #fff, 0 0 10px #00ffff;
+      transform: scale(1.05);
+    }
+
+    .top-menu a.active {
+      border-bottom: 2px solid #fff;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      background-color: #1a1a1a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.7rem;
+      background-color: #00ffff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #000;
+    }
+
+    button:hover {
+      background-color: #00cccc;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    .success {
+      margin-top: 1rem;
+      color: #00ff99;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .top-menu {
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- เมนู -->
+<nav class="top-menu">
+  <a href="index.html">หน้าหลัก</a>
+  <a href="borrow.html">ยืมของ</a>
+  <a href="return.html" class="active">คืนของ</a>
+  <a href="items.html">รายการของ</a>
+  <a href="history.html">ประวัติการยืม</a>
+</nav>
+
+<!-- เนื้อหา -->
+<div class="container">
+  <h2>คืนของ</h2>
+  <form id="returnForm">
+    <label for="returner">ชื่อผู้คืน:</label>
+    <input id="returner" readonly type="text"/>
+
+    <label for="item">รายการของ:</label>
+    <input id="item" placeholder="กรอกชื่อของที่คืน" required type="text"/>
+
+    <button type="submit">บันทึกการคืน</button>
+    <div class="success" id="successMsg">✅ บันทึกเรียบร้อยแล้ว</div>
+  </form>
+</div>
+
+<footer>
+  © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+</footer>
+
+<!-- JavaScript -->
+<script>
+  const userData = localStorage.getItem('currentUser');
+  if (!userData) {
+    alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
+    window.location.href = 'login.html';
+  } else {
+    const user = JSON.parse(userData);
+    document.getElementById('returner').value = user.username || '';
+  }
+
+  const form = document.getElementById('returnForm');
+  const successMsg = document.getElementById('successMsg');
+  const itemInput = document.getElementById('item');
+
+  itemInput.addEventListener('input', () => {
+    successMsg.style.display = 'none';
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const returner = document.getElementById('returner').value.trim();
+    const item = itemInput.value.trim();
+    if (!item) {
+      alert('กรุณากรอกชื่อของที่ต้องการคืน');
+      return;
+    }
+
+    const returnDate = new Date().toLocaleString('th-TH', { hour12: false });
+    const history = JSON.parse(localStorage.getItem('historyList')) || [];
+
+    const matchIndex = history.findIndex(h =>
+      h.borrower === returner &&
+      h.item === item &&
+      !h.returnDate
+    );
+
+    if (matchIndex !== -1) {
+      // อัปเดตสถานะคืนของในประวัติ
+      history[matchIndex].returnDate = returnDate;
+      localStorage.setItem('historyList', JSON.stringify(history));
+
+      // เพิ่มจำนวนในรายการของ (itemList)
+      const items = JSON.parse(localStorage.getItem('itemList')) || [];
+      const foundItem = items.find(i => i.name.toLowerCase() === item.toLowerCase());
+      if (foundItem) {
+        foundItem.quantity = (parseInt(foundItem.quantity) || 0) + 1;
+        localStorage.setItem('itemList', JSON.stringify(items));
+      }
+
+      successMsg.style.display = 'block';
+      form.reset();
+      document.getElementById('returner').value = returner;
+    } else {
+      alert('ไม่พบรายการที่ตรง หรือรายการนี้คืนไปแล้ว');
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ระบบยืมของ - วิทยาลัยเทคนิค</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #0d0d0d;
+      color: #eee;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Neon border animation container */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 20px);
+      top: 10px;
+      left: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+      animation: neon-border 4s linear infinite;
+    }
+
+    body::after {
+      border-color: #8a72c7;
+      animation-delay: 2s;
+      filter: drop-shadow(0 0 10px #8a72c7);
+    }
+
+    body::before {
+      border-color: #00fff7;
+      filter: drop-shadow(0 0 10px #00fff7);
+    }
+
+    @keyframes neon-border {
+      0% {
+        border-top-color: #8a72c7;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+      }
+      25% {
+        border-top-color: transparent;
+        border-right-color: #8a72c7;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+      }
+      50% {
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: #8a72c7;
+        border-left-color: transparent;
+      }
+      75% {
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: #8a72c7;
+      }
+      100% {
+        border-top-color: #8a72c7;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+      }
+    }
+
+    /* Layout and style */
+    .top-bar {
+      background: #1f1436;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 30px;
+      box-shadow: 0 0 15px #8a72c7aa;
+      font-weight: 600;
+      font-size: 1em;
+      color: #dcd6f7;
+      text-shadow: 0 0 4px #8a72c7;
+      position: relative;
+      z-index: 10;
+    }
+
+    #logoutBtn {
+      background: #c0392b;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      color: white;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 8px #c0392bcc;
+      text-shadow: 0 0 3px #fff;
+    }
+    #logoutBtn:hover {
+      background: #992d22;
+      box-shadow: 0 0 15px #ff4f4f;
+      transform: scale(1.07);
+    }
+
+    .marquee {
+      background: #6b59b8;
+      color: #fff;
+      padding: 8px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      font-weight: 600;
+      text-shadow: 0 0 5px #a288e3;
+      user-select: none;
+      box-shadow: 0 0 8px #a288e3aa inset;
+    }
+    .marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 15s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .main-nav {
+      background-color: #241a46;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+      box-shadow: 0 0 20px #6b59b8cc;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      z-index: 10;
+    }
+    .main-nav a {
+      color: #dcd6f7;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 8px;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 8px #6b59b8cc;
+      text-shadow: 0 0 6px #7a66ce;
+    }
+    .main-nav a:hover {
+      background: #6b59b8;
+      box-shadow: 0 0 18px #a288e3;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .slideshow-container {
+      position: relative;
+      height: 60vh;
+      overflow: hidden;
+      margin: 25px 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #8a72c7cc;
+      border: 3px solid #6b59b8;
+    }
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 60vh;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      filter: drop-shadow(0 0 15px #8a72c7);
+      border-radius: 20px;
+    }
+    .slide.active {
+      opacity: 1;
+      z-index: 2;
+    }
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(107, 89, 184, 0.7);
+      border: none;
+      color: white;
+      font-size: 2.5em;
+      padding: 10px 18px;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 10;
+      transition: background-color 0.3s, transform 0.3s;
+      user-select: none;
+      box-shadow: 0 0 10px #8a72c7;
+      text-shadow: 0 0 8px #a288e3;
+    }
+    .prev:hover, .next:hover {
+      background: #8a72c7;
+      transform: translateY(-50%) scale(1.15);
+      box-shadow: 0 0 20px #d1c4fd;
+    }
+    .prev { left: 20px; }
+    .next { right: 20px; }
+
+    .stats, .quick-links {
+      max-width: 1000px;
+      margin: 35px auto;
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card {
+      background: #1e1a29;
+      padding: 30px;
+      border-radius: 20px;
+      flex: 1 1 280px;
+      box-shadow: 0 0 15px #7b6ed3aa;
+      text-align: center;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: default;
+      color: #c1baff;
+      text-shadow: 0 0 6px #8a72c7;
+      font-weight: 600;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px #bba7ff;
+      background: #342e60;
+      color: #fff;
+      text-shadow: 0 0 10px #c4baff;
+    }
+    .card h3 {
+      margin-bottom: 18px;
+      font-size: 1.4em;
+    }
+    .card p {
+      font-size: 3em;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .quick-links .link-card {
+      background: #1e1a29;
+      padding: 25px;
+      border-radius: 20px;
+      flex: 1 1 280px;
+      box-shadow: 0 0 15px #7b6ed3aa;
+      text-align: center;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      color: #c1baff;
+      font-weight: 700;
+      font-size: 1.25em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
+      text-shadow: 0 0 7px #8a72c7;
+    }
+    .quick-links .link-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px #bba7ff;
+      background: #342e60;
+      color: #fff;
+      text-shadow: 0 0 12px #c4baff;
+    }
+
+    #topBtn {
+      position: fixed;
+      bottom: 35px;
+      right: 35px;
+      background: #8a72c7;
+      color: white;
+      border: none;
+      padding: 16px 20px;
+      border-radius: 50%;
+      font-size: 1.6em;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 0 20px #d1c4fd;
+      transition: background-color 0.3s, transform 0.3s;
+      user-select: none;
+      z-index: 100;
+      text-shadow: 0 0 8px #fff;
+    }
+    #topBtn:hover {
+      background: #5a4172;
+      transform: scale(1.2);
+      box-shadow: 0 0 35px #e5d3ff;
+    }
+
+    footer {
+      background: #1a1230;
+      text-align: center;
+      padding: 25px;
+      font-size: 1em;
+      margin-top: 70px;
+      box-shadow: 0 0 25px #6b59b8bb inset;
+      color: #c1baff;
+      text-shadow: 0 0 8px #8a72c7;
+      font-weight: 700;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="contact">
+      <span>☎ 0********</span>
+      <span>✉ pbntc.ac.th</pbntc></span>
+    </div>
+    <button id="logoutBtn">ออกจากระบบ</button>
+  </div>
+
+  <div class="marquee">
+    <span>ยินดีต้อนรับสู่ระบบยืมของ วิทยาลัยเทคนิคของเรา • ประกาศล่าสุด: ปิดปรับปรุงระบบช่วง 10:00-11:00 น. ทุกวันอาทิตย์</span>
+  </div>
+
+  <nav class="main-nav">
+    <a href="index.html">หน้าหลัก</a>
+    <a href="borrow.html">ยืมของ</a>
+    <a href="return.html">คืนของ</a>
+    <a href="items.html">รายการของ</a>
+    <a href="history.html">ประวัติการยืม</a>
+  </nav>
+
+  <div class="slideshow-container">
+    <div class="slide active" style="background-image:url('ภาพ/คอม.jpg')"></div>
+    <div class="slide" style="background-image:url('ภาพ/รวม.jpg')"></div>
+    <div class="slide" style="background-image:url('ภาพ/สวาน_PhotoGrid.png')"></div>
+    <div class="slide" style="background-image:url('ภาพ/ไขควง_PhotoGrid.png')"></div>
+    <div class="slide" style="background-image:url('ภาพ/ดาวน์โหลด_PhotoGrid.png')"></div>
+    <div class="slide" style="background-image:url('ภาพ/images-Pica.png')"></div>
+
+    <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+    <button class="next" onclick="changeSlide(1)">&#10095;</button>
+  </div>
+
+  <div class="stats">
+    <div class="card">
+      <h3>รายการทั้งหมด</h3>
+      <p id="totalItems">0</p>
+    </div>
+    <div class="card">
+      <h3>กำลังยืมอยู่</h3>
+      <p id="borrowedCount">0</p>
+    </div>
+    <div class="card">
+      <h3>คืนแล้ว</h3>
+      <p id="returnedCount">0</p>
+    </div>
+  </div>
+
+  <div class="quick-links">
+    <a href="borrow.html" class="link-card">ยืมของ</a>
+    <a href="return.html" class="link-card">คืนของ</a>
+    <a href="items.html" class="link-card">รายการของ</a>
+    <a href="history.html" class="link-card">ประวัติการยืม</a>
+  </div>
+
+  <button id="topBtn" onclick="scrollToTop()">↑</button>
+
+  <footer>
+    &copy; 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+  </footer>
+
+  <script>
+    // Slide show control
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[(n + slides.length) % slides.length].classList.add('active');
+    }
+
+    function changeSlide(diff) {
+      slideIndex = (slideIndex + diff + slides.length) % slides.length;
+      showSlide(slideIndex);
+    }
+
+    setInterval(() => changeSlide(1), 5000);
+    showSlide(slideIndex);
+
+    // Update stats from localStorage example
+    function updateStats() {
+      const totalItems = localStorage.getItem('itemsList') ? JSON.parse(localStorage.getItem('itemsList')).length : 0;
+      const borrowedCount = localStorage.getItem('borrowList') ? JSON.parse(localStorage.getItem('borrowList')).length : 0;
+      const returnedCount = localStorage.getItem('historyList') ? JSON.parse(localStorage.getItem('historyList')).length : 0;
+
+      document.getElementById('totalItems').innerText = totalItems;
+      document.getElementById('borrowedCount').innerText = borrowedCount;
+      document.getElementById('returnedCount').innerText = returnedCount;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateStats();
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('currentUser');
+        alert('ออกจากระบบเรียบร้อยแล้ว');
+        window.location.href = 'login.html';
+      });
+
+      window.addEventListener('scroll', () => {
+        const topBtn = document.getElementById('topBtn');
+        if (window.scrollY > 200) topBtn.style.display = 'block';
+        else topBtn.style.display = 'none';
+      });
+    });
+
+    function scrollToTop() {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  </script>
+</body>
+</html>

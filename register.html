@@ -1,0 +1,195 @@
+<!DOCTYPE html> 
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>สมัครสมาชิก - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1, h2 {
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255,255,255,0.02);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255,0,0,0.2);
+    }
+
+    .box {
+      background-color: #111;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.3);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      background: #222;
+      color: #fff;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.8rem;
+      background-color: #a066e4;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .success {
+      margin-top: 1rem;
+      color: #00ff99;
+      text-shadow: 0 0 5px #00ff99;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(255, 0, 0, 0.05);
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      margin: 1rem auto 2rem;
+      max-width: 600px;
+      box-shadow: 0 0 10px #ff000033, 0 0 20px #ff000022;
+      border: 1px solid #ff000033;
+    }
+
+    .menu a {
+      color: #ff4444;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 6px #ff0000aa;
+    }
+
+    .menu a:hover {
+      background: #ff000022;
+      box-shadow: 0 0 8px #ff0000, 0 0 16px #ff0000aa;
+      transform: translateY(-2px);
+    }
+
+    .menu a.active {
+      background: #ff0000;
+      color: #ffffff;
+      text-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>ระบบยืมของ</h1>
+
+  <nav class="menu">
+    <a href="index.html">🏠 หน้าหลัก</a>
+    <a href="login.html">🔑 เข้าสู่ระบบ</a>
+    <a href="register.html" class="active">📝 สมัครสมาชิก</a>
+  </nav>
+
+  <div class="box">
+    <h2>สมัครสมาชิก</h2>
+    <form id="registerForm">
+      <label for="username">ชื่อผู้ใช้:</label>
+      <input id="username" type="text" placeholder="กรอกชื่อผู้ใช้" required/>
+
+      <label for="password">รหัสผ่าน:</label>
+      <input id="password" type="password" placeholder="กรอกรหัสผ่าน" required/>
+
+      <label for="fullname">ชื่อ-นามสกุล:</label>
+      <input id="fullname" type="text" placeholder="กรอกชื่อ-นามสกุล" required/>
+
+      <button type="submit">สมัครสมาชิก</button>
+      <div class="success" id="successMsg">✅ สมัครสมาชิกเรียบร้อยแล้ว</div>
+    </form>
+  </div>
+
+  <footer>
+    © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+  </footer>
+</div>
+
+<script>
+  const form = document.getElementById('registerForm');
+  const successMsg = document.getElementById('successMsg');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const fullname = document.getElementById('fullname').value.trim();
+
+    if (!username || !password || !fullname) {
+      alert('กรุณากรอกข้อมูลให้ครบ');
+      return;
+    }
+
+    // ดึงข้อมูลผู้ใช้เดิมจาก localStorage (แก้เป็น userList ให้ตรงกับ login.html)
+    const users = JSON.parse(localStorage.getItem('userList')) || [];
+
+    // ตรวจสอบว่ามีชื่อผู้ใช้นี้อยู่แล้วหรือไม่
+    if (users.some(u => u.username === username)) {
+      alert('ชื่อผู้ใช้นี้ถูกใช้แล้ว');
+      return;
+    }
+
+    // เพิ่มผู้ใช้ใหม่
+    users.push({ username, password, fullname });
+    localStorage.setItem('userList', JSON.stringify(users));
+
+    successMsg.style.display = 'block';
+    form.reset();
+
+    // ย้ายไปหน้าเข้าสู่ระบบอัตโนมัติ
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+  });
+</script>
+
+</body>
+</html>

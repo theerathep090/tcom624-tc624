@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>เข้าสู่ระบบ - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h2 {
+      color: #fff;
+      text-align: center;
+      text-shadow:
+        0 0 5px #ff00ff,
+        0 0 10px #ff00ff,
+        0 0 20px #ff00ff;
+    }
+
+    a, button {
+      color: #00ffcc;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    a:hover, button:hover {
+      text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: rgba(255,255,255,0.02);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 
+        0 0 10px #ff00ff,
+        0 0 20px #00ffff,
+        0 0 30px #00ffcc;
+      animation: pulse-glow 6s infinite alternate;
+    }
+
+    .box {
+      padding: 1rem;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 0 0 5px #00ffff;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      background: #e5e7eb;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .password-container button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(90deg, #00ffff, #ff00ff, #00ff00);
+      padding: 0.8rem;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      width: 100%;
+      color: #000;
+      box-shadow:
+        0 0 5px #fff,
+        0 0 10px #0ff,
+        0 0 20px #0f0,
+        0 0 30px #f0f;
+      transition: 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      transform: scale(1.03);
+      box-shadow:
+        0 0 10px #fff,
+        0 0 20px #0ff,
+        0 0 30px #0f0,
+        0 0 40px #f0f;
+    }
+
+    .link {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .link a {
+      color: #a78bfa;
+      text-shadow: 0 0 8px #a78bfa;
+    }
+
+    .error {
+      margin-top: 0.5rem;
+      color: #ff4d4d;
+      text-shadow: 0 0 5px #ff4d4d;
+    }
+
+    /* กรอบขอบเรืองแสงรอบหน้า */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 12px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 20px);
+      top: 10px;
+      left: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+    }
+
+    body::before {
+      border-color: #ff00ff;
+      filter: drop-shadow(0 0 10px #ff00ff);
+      animation: border-glow 5s ease-in-out infinite;
+    }
+
+    body::after {
+      border-color: #00ffff;
+      filter: drop-shadow(0 0 10px #00ffff);
+      animation: border-glow 5s ease-in-out infinite reverse;
+    }
+
+    @keyframes border-glow {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffcc;
+      }
+      100% {
+        box-shadow: 0 0 20px #00ffcc, 0 0 30px #ff00ff, 0 0 40px #00ffff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box">
+      <h2>เข้าสู่ระบบ</h2>
+      <form id="loginForm">
+        <label for="username">ชื่อผู้ใช้</label>
+        <input id="username" placeholder="ชื่อผู้ใช้ของคุณ" required type="text" />
+        
+        <label for="password">รหัสผ่าน</label>
+        <div class="password-container">
+          <input id="password" placeholder="รหัสผ่าน" required type="password" />
+          <button id="togglePassword" title="แสดง/ซ่อนรหัสผ่าน" type="button">👁️</button>
+        </div>
+
+        <button type="submit">เข้าสู่ระบบ</button>
+        <div class="error" id="errorMsg"></div>
+      </form>
+
+      <div class="link">
+        ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // toggle แสดง/ซ่อนรหัสผ่าน
+    document.getElementById('togglePassword').addEventListener('click', function () {
+      const passwordInput = document.getElementById('password');
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      this.textContent = isPassword ? '🙈' : '👁️';
+    });
+
+    // ฟังก์ชันเข้าสู่ระบบ
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const users = JSON.parse(localStorage.getItem('userList')) || [];
+      const user = users.find(u => u.username === username && u.password === password);
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        window.location.href = 'index.html';
+      } else {
+        errorMsg.innerText = '❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+      }
+    });
+  </script>
+</body>
+</html>

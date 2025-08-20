@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>รายการของ - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #000000;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      padding: 1rem 2rem;
+      text-align: center;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      text-shadow: 0 0 10px #fff;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      background: #111;
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 255, 255, 0.1);
+    }
+    nav a {
+      color: #00ffe7;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px #00ffe7;
+    }
+    nav a.active {
+      color: #fff;
+      text-shadow: 0 0 10px #00ffe7;
+      font-weight: bolder;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h2 {
+      text-align: center;
+      color: #00ffcc;
+      margin-bottom: 1rem;
+    }
+    form {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      background: #00ffe7;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00ccaa;
+      color: white;
+    }
+    #searchInput {
+      margin-bottom: 1rem;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+    th {
+      background-color: #00c6ff;
+      color: black;
+    }
+    .btn-delete {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-delete:hover {
+      background: #e60000;
+    }
+    #noItems {
+      text-align: center;
+      color: #ccc;
+      margin-top: 2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+      form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      input[type="number"] {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ระบบยืมของ</h1>
+  </header>
+  <nav>
+    <a href="index.html">หน้าหลัก</a>
+    <a href="borrow.html">ยืมของ</a>
+    <a href="return.html">คืนของ</a>
+    <a href="items.html" class="active">รายการของ</a>
+    <a href="history.html">ประวัติการยืม</a>
+  </nav>
+  <div class="container">
+    <h2>รายการของ</h2>
+    <form id="addItemForm">
+      <input type="text" id="itemName" placeholder="ชื่อของ" required />
+      <input type="number" id="itemQuantity" placeholder="จำนวน" min="1" value="1" required />
+      <button type="submit">เพิ่มของ</button>
+    </form>
+    <input type="text" id="searchInput" placeholder="ค้นหาชื่อของ..." />
+    <table id="itemTable">
+      <thead>
+        <tr>
+          <th>ชื่อของ</th>
+          <th>จำนวน</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="noItems" style="display:none;">ไม่มีรายการของ</div>
+  </div>
+  <footer>
+    © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+  </footer>
+
+  <script>
+    let user = null;
+    const addItemForm = document.getElementById('addItemForm');
+    const itemTable = document.getElementById('itemTable');
+    const noItems = document.getElementById('noItems');
+    const tbody = itemTable.querySelector('tbody');
+
+    function initializeItems() {
+      let items = loadItems();
+      if (items.length === 0) {
+        items = [
+          { name: "ESP32 Smart Farm IoT Kit for Arduino & Scratch 3.0", quantity: 1 },
+          { name: "POWER SUPPLY (80+ BRONZE) 650 W ITSONAS DARK FOREST SFX", quantity: 1 },
+          { name: "เลเซอร์พอยเตอร์ LOGITECH R800 - BLACK", quantity: 1 },
+          { name: "2WD Smart Car Robot Chassis Kits", quantity: 7 },
+          { name: "Arduino UNO R3 - Made in italy", quantity: 7 },
+          { name: "Motor Drive Module L298N", quantity: 7 },
+          { name: "สาย Jumper Female to Male ยาว 20cm.", quantity: 6 },
+          { name: "สาย Jumper Male to Male ยาว 20cm.", quantity: 6 },
+          { name: "รางถ่านแบบ 18650 ใส่ถ่าน 2 ก้อน", quantity: 6 },
+          { name: "แบตเตอรี่ลิเธียม 18650 จำนวน 2 ก้อน", quantity: 6 },
+          { name: "กล่องพลาสติกเก็บอุปกรณ์", quantity: 6 },
+          { name: "คู่มือโครงงาน IoT Smart Farm", quantity: 6 },
+          { name: "NODE MCU ESP8266", quantity: 10 },
+          { name: "สาย Micro USB", quantity: 10 },
+          { name: "เซนเซอร์วัดอุณหภูมิ DHT11", quantity: 10 },
+          { name: "เซนเซอร์วัดความชื้นในดิน", quantity: 10 },
+          { name: "Relay Module 1 Channel 5V", quantity: 10 },
+          { name: "สายจัมเปอร์ตัวเมีย-ตัวผู้", quantity: 10 },
+          { name: "สายจัมเปอร์ตัวผู้-ตัวผู้", quantity: 10 },
+          { name: "บอร์ดทดลอง Breadboard", quantity: 10 }
+        ];
+        saveItems(items);
+      }
+    }
+
+    function loadItems() {
+      return JSON.parse(localStorage.getItem('itemList')) || [];
+    }
+
+    function saveItems(items) {
+      localStorage.setItem('itemList', JSON.stringify(items));
+    }
+
+    function renderItems() {
+      const items = loadItems();
+      tbody.innerHTML = '';
+      if (items.length === 0) {
+        itemTable.style.display = 'none';
+        noItems.style.display = 'block';
+        return;
+      }
+      noItems.style.display = 'none';
+      itemTable.style.display = 'table';
+      items.forEach((item, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.quantity}</td>
+          <td><button class="btn-delete" onclick="deleteItem(${i})">ลบ</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteItem(index) {
+      if (!confirm('ต้องการลบของชิ้นนี้?')) return;
+      let items = loadItems();
+      items.splice(index, 1);
+      saveItems(items);
+      renderItems();
+    }
+
+    addItemForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('itemName').value.trim();
+      const quantityStr = document.getElementById('itemQuantity').value;
+      const quantity = parseInt(quantityStr, 10);
+
+      if (!name) return alert('กรุณากรอกชื่อของ');
+      if (isNaN(quantity) || quantity < 1) return alert('กรุณากรอกจำนวนอย่างถูกต้อง (1 หรือมากกว่า)');
+
+      let items = loadItems();
+      const existingIndex = items.findIndex(i => i.name.toLowerCase() === name.toLowerCase());
+
+      if (existingIndex !== -1) {
+        items[existingIndex].quantity += quantity;
+      } else {
+        items.push({ name, quantity });
+      }
+      saveItems(items);
+      addItemForm.reset();
+      renderItems();
+    });
+
+    // ฟังก์ชันกรองข้อมูล
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      const rows = tbody.getElementsByTagName('tr');
+      let visible = 0;
+
+      for (let row of rows) {
+        const nameCell = row.getElementsByTagName('td')[0];
+        if (nameCell) {
+          const text = nameCell.textContent || nameCell.innerText;
+          if (text.toLowerCase().indexOf(filter) > -1) {
+            row.style.display = '';
+            visible++;
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      }
+
+      noItems.style.display = visible === 0 ? 'block' : 'none';
+    });
+
+    function reduceItemQuantity(itemName, amount = 1) {
+      let items = loadItems();
+      const index = items.findIndex(i => i.name.toLowerCase() === itemName.toLowerCase());
+      if (index !== -1) {
+        if (items[index].quantity >= amount) {
+          items[index].quantity -= amount;
+          saveItems(items);
+          renderItems();
+          return true;
+        } else {
+          alert(`ของ "${itemName}" ไม่พอในคลัง`);
+          return false;
+        }
+      } else {
+        alert(`ไม่พบของ "${itemName}" ในคลัง`);
+        return false;
+      }
+    }
+
+    function increaseItemQuantity(itemName, amount = 1) {
+      let items = loadItems();
+      const index = items.findIndex(i => i.name.toLowerCase() === itemName.toLowerCase());
+      if (index !== -1) {
+        items[index].quantity += amount;
+      } else {
+        items.push({name: itemName, quantity: amount});
+      }
+      saveItems(items);
+      renderItems();
+    }
+
+    window.reduceItemQuantity = reduceItemQuantity;
+    window.increaseItemQuantity = increaseItemQuantity;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initializeItems();
+      renderItems();
+
+      const userData = localStorage.getItem('currentUser');
+      if (!userData) {
+        alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
+        window.location.href = 'login.html';
+      } else {
+        user = JSON.parse(userData);
+      }
+    });
+  </script>
+</body>
+</html>

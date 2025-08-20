@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ประวัติการยืม - ระบบยืมของ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun&amp;display=swap" rel="stylesheet"/>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      color: #33ff00;
+      text-shadow: 0 0 10px #33ff00;
+    }
+
+    a, button {
+      color: #33ff00;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    a:hover, button:hover {
+      text-shadow: 0 0 5px #33ff00, 0 0 10px #33ff00;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: rgba(255,255,255,0.02);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+    }
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 20px);
+      top: 10px;
+      left: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+      animation: neon-border 4s linear infinite;
+    }
+
+    body::after {
+      border-color: #33ff00;
+      animation-delay: 2s;
+      filter: drop-shadow(0 0 10px #33ff00);
+    }
+
+    body::before {
+      border-color: #33ff00;
+      filter: drop-shadow(0 0 10px #33ff00);
+    }
+
+    @keyframes neon-border {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    </style>
+</head>
+<body><div class="container">
+<header>
+<h1>ระบบยืมของ</h1>
+</header>
+<nav>
+<a href="index.html">หน้าหลัก</a>
+<a href="borrow.html">ยืมของ</a>
+<a href="return.html">คืนของ</a>
+<a href="items.html">รายการของ</a>
+<a href="history.html">ประวัติการยืม</a>
+</nav>
+<main>
+<div class="box">
+<h2>ประวัติการยืมและคืน</h2>
+<div class="no-data" id="noData" style="display: none;">ไม่มีประวัติการยืมหรือคืนของ</div>
+<table id="historyList" style="display: none;">
+<thead>
+<tr>
+<th>ชื่อผู้ยืม</th>
+<th>ของที่ยืม</th>
+<th>วันที่ยืม</th>
+<th>วันที่คืน</th>
+<th id="adminHeader" style="display:none;">ลบ</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</main>
+<footer>
+  © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+</footer>
+<script>
+  const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+  const isAdmin = currentUser.role === 'ผู้ดูแล';
+
+  function escapeHTML(text) {
+    const div = document.createElement('div');
+    div.innerText = text;
+    return div.innerHTML;
+  }
+
+  function updateHistoryTable() {
+    const historyList = JSON.parse(localStorage.getItem('historyList')) || [];
+    const table = document.getElementById('historyList');
+    const noData = document.getElementById('noData');
+    const tbody = table.querySelector('tbody');
+    const adminHeader = document.getElementById('adminHeader');
+    tbody.innerHTML = '';
+
+    if (historyList.length === 0) {
+      table.style.display = 'none';
+      noData.style.display = 'block';
+      return;
+    }
+
+    historyList.forEach((item, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${escapeHTML(item.borrower)}</td>
+        <td>${escapeHTML(item.item)}</td>
+        <td>${escapeHTML(item.date)}</td>
+        <td>${item.returnDate ? escapeHTML(item.returnDate) : '-'}</td>
+        ${isAdmin ? `<td><button class="delete-btn" onclick="deleteHistory(${index})">ลบ</button></td>` : ''}
+      `;
+      tbody.appendChild(row);
+    });
+
+    if (isAdmin) {
+      adminHeader.style.display = 'table-cell';
+    }
+
+    table.style.display = 'table';
+    noData.style.display = 'none';
+  }
+
+  function deleteHistory(index) {
+    if (!confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) return;
+    let historyList = JSON.parse(localStorage.getItem('historyList')) || [];
+    historyList.splice(index, 1);
+    localStorage.setItem('historyList', JSON.stringify(historyList));
+    updateHistoryTable();
+  }
+
+  updateHistoryTable();
+</script>
+</div></body>
+</html>

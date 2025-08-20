@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ยืมของ - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
+  <style>
+    /* (ใช้ CSS เหมือนเดิม ไม่เปลี่ยน) */
+    * {
+      box-sizing: border-box;
+      font-family: 'Sarabun', sans-serif;
+    }
+    body {
+      background-color: #0b0b0b;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #3a2a63, #2e1f50);
+      padding: 1rem;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #2c1e4a;
+      padding: 0.5rem 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-weight: bold;
+      padding-bottom: 5px;
+      position: relative;
+    }
+    nav a:hover,
+    nav a.active {
+      border-bottom: 3px solid #00ffff;
+    }
+    .center-box {
+      max-width: 500px;
+      margin: 60px auto;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 20px #00ffff44;
+    }
+    h2 {
+      text-align: center;
+      color: #00ffff;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #222;
+      color: white;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00ffff;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00ffff;
+    }
+    button:hover {
+      background-color: #00dddd;
+      box-shadow: 0 0 20px #00ffff;
+    }
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 20px);
+      top: 10px;
+      left: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+      animation: neon-border 4s linear infinite;
+    }
+    body::after {
+      border-color: #00ffff;
+      animation-delay: 2s;
+      filter: drop-shadow(0 0 10px #00ffff);
+    }
+    body::before {
+      border-color: #00ffff;
+      filter: drop-shadow(0 0 10px #00ffff);
+    }
+    @keyframes neon-border {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ระบบยืมของ</h1>
+  </header>
+  <nav>
+    <a href="index.html">หน้าหลัก</a>
+    <a href="borrow.html" class="active">ยืมของ</a>
+    <a href="return.html">คืนของ</a>
+    <a href="items.html">รายการของ</a>
+    <a href="history.html">ประวัติการยืม</a>
+  </nav>
+
+  <div class="center-box">
+    <h2>ยืมของ</h2>
+    <form id="borrowForm">
+      <label for="borrower">ชื่อผู้ยืม:</label>
+      <input type="text" id="borrower" readonly>
+
+      <label for="item">รายการของ:</label>
+      <input type="text" id="item" placeholder="กรอกชื่อของที่ยืม" required>
+
+      <button type="submit">บันทึกการยืม</button>
+    </form>
+  </div>
+
+  <footer>
+    © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+  </footer>
+
+  <script>
+    // โหลดข้อมูลผู้ใช้จาก localStorage
+    const userData = localStorage.getItem('currentUser');
+    if (!userData) {
+      alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
+      window.location.href = 'login.html';
+    }
+    const user = JSON.parse(userData);
+    document.getElementById('borrower').value = user.username || '';
+
+    // โหลดรายการของ
+    function loadItems() {
+      return JSON.parse(localStorage.getItem('itemList')) || [];
+    }
+    // บันทึกรายการของ
+    function saveItems(items) {
+      localStorage.setItem('itemList', JSON.stringify(items));
+    }
+
+    // ลดจำนวนของในคลัง itemList ตามชื่อของที่ยืม
+    function reduceItemQuantity(itemName, amount = 1) {
+      const items = loadItems();
+      const index = items.findIndex(i => i.name.toLowerCase() === itemName.toLowerCase());
+      if (index === -1) return false; // ไม่พบของ
+      if (items[index].quantity < amount) return false; // จำนวนไม่พอ
+      items[index].quantity -= amount;
+      saveItems(items);
+      return true;
+    }
+
+    // โหลดประวัติการยืม
+    function loadHistory() {
+      return JSON.parse(localStorage.getItem('historyList')) || [];
+    }
+    // บันทึกประวัติการยืม
+    function saveHistory(history) {
+      localStorage.setItem('historyList', JSON.stringify(history));
+    }
+
+    // โหลดรายการยืมปัจจุบัน (ถ้าจำเป็น)
+    function loadBorrowList() {
+      return JSON.parse(localStorage.getItem('borrowList')) || [];
+    }
+    // บันทึกรายการยืมปัจจุบัน
+    function saveBorrowList(list) {
+      localStorage.setItem('borrowList', JSON.stringify(list));
+    }
+
+    const form = document.getElementById('borrowForm');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const borrower = document.getElementById('borrower').value.trim();
+      const item = document.getElementById('item').value.trim();
+      const date = new Date().toLocaleString('th-TH', { hour12: false });
+
+      if (!item) {
+        alert("กรุณากรอกชื่อของที่ยืม");
+        return;
+      }
+
+      // ลดจำนวนของในคลัง
+      const success = reduceItemQuantity(item, 1);
+      if (!success) {
+        alert("ไม่สามารถยืมของได้ เนื่องจากจำนวนของไม่เพียงพอหรือไม่มีรายการนี้");
+        return;
+      }
+
+      // บันทึกรายการยืม
+      const borrowList = loadBorrowList();
+      borrowList.push({ borrower, item, date });
+      saveBorrowList(borrowList);
+
+      // บันทึกประวัติการยืม
+      const history = loadHistory();
+      history.push({ borrower, item, borrowDate: date, returnDate: null });
+      saveHistory(history);
+
+      alert("บันทึกการยืมเรียบร้อยแล้ว");
+      form.reset();
+      document.getElementById('borrower').value = borrower;
+    });
+  </script>
+</body>
+</html>

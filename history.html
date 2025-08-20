@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ประวัติการยืม - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Sarabun', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0b0b0b;
+      color: #f0f0f0;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #111;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px #ff66ff;
+    }
+
+    header h1 {
+      color: #ff66ff;
+      text-shadow: 0 0 10px #ff66ff;
+    }
+
+    nav {
+      background-color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    nav a {
+      color: #ff66ff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+    }
+
+    nav a:hover {
+      background: #222;
+      box-shadow: 0 0 8px #ff66ff;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+    }
+
+    h1 {
+      color: #ff66ff;
+      text-shadow: 0 0 10px #ff66ff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #111;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #222;
+      color: #00ffff;
+    }
+
+    td {
+      color: #eee;
+    }
+
+    button.btn-delete {
+      background-color: #ff4444;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button.btn-delete:hover {
+      background-color: #ff2222;
+      box-shadow: 0 0 5px #ff4444;
+    }
+
+    #noHistory {
+      text-align: center;
+      color: #888;
+      padding: 2rem 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #111;
+      color: #666;
+      font-size: 0.9rem;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    /* Neon border effect */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 10px;
+      width: calc(100vw - 20px);
+      height: calc(100vh - 20px);
+      top: 10px;
+      left: 10px;
+      box-sizing: border-box;
+      z-index: 9999;
+      animation: neon-border 4s linear infinite;
+    }
+
+    body::after {
+      border-color: #ff66ff;
+      animation-delay: 2s;
+      filter: drop-shadow(0 0 10px #ff66ff);
+    }
+
+    body::before {
+      border-color: #ff66ff;
+      filter: drop-shadow(0 0 10px #ff66ff);
+    }
+
+    @keyframes neon-border {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ระบบยืมของ</h1>
+  </header>
+
+  <nav>
+    <a href="index.html">หน้าหลัก</a>
+    <a href="borrow.html">ยืมของ</a>
+    <a href="return.html">คืนของ</a>
+    <a href="items.html">รายการของ</a>
+    <a href="history.html">ประวัติการยืม</a>
+    <a href="user-management.html" id="userManagementLink" style="display:none;">จัดการผู้ใช้</a>
+  </nav>
+
+  <main>
+    <h1>ประวัติการยืมคืน</h1>
+    <table id="historyTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>ชื่อผู้ยืม</th>
+          <th>ของที่ยืม</th>
+          <th>วันที่และเวลายืม</th>
+          <th>วันที่และเวลาคืน</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="noHistory">ไม่มีประวัติการยืม</div>
+  </main>
+
+  <footer>
+    © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+  </footer>
+
+  <script>
+    let user = null;
+
+    const historyTable = document.getElementById('historyTable');
+    const noHistory = document.getElementById('noHistory');
+    const tbody = historyTable.querySelector('tbody');
+
+    function loadHistory() {
+      return JSON.parse(localStorage.getItem('historyList')) || [];
+    }
+
+    function saveHistory(data) {
+      localStorage.setItem('historyList', JSON.stringify(data));
+    }
+
+    function renderHistory() {
+      const history = loadHistory();
+      tbody.innerHTML = '';
+
+      if (history.length === 0) {
+        historyTable.style.display = 'none';
+        noHistory.style.display = 'block';
+        return;
+      }
+
+      noHistory.style.display = 'none';
+      historyTable.style.display = 'table';
+
+      history.forEach((h, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${h.borrower}</td>
+          <td>${h.item}</td>
+          <td>${h.borrowDate}</td>
+          <td>${h.returnDate || '-'}</td>
+          <td>${user && user.role === 'ผู้ดูแล' ? `<button class="btn-delete" onclick="deleteHistory(${i})">ลบ</button>` : ''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteHistory(index) {
+      if (!confirm('ต้องการลบประวัติรายการนี้?')) return;
+      let history = loadHistory();
+      history.splice(index, 1);
+      saveHistory(history);
+      renderHistory();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const userData = localStorage.getItem('currentUser');
+      if (!userData) {
+        alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
+        window.location.href = 'login.html';
+      } else {
+        user = JSON.parse(userData);
+        if (user.role === 'ผู้ดูแล') {
+          document.getElementById('userManagementLink').style.display = 'inline-block';
+        }
+        renderHistory();
+      }
+    });
+  </script>
+</body>
+</html>
