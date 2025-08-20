@@ -13,6 +13,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .login-box {
       background: rgba(255,255,255,0.05);
@@ -34,11 +35,16 @@
       border: none;
       font-size: 1rem;
     }
+    input {
+      background: #fff;
+      color: #000;
+    }
     button {
       background: #111;
       color: #ff00cc;
       border: 1px solid #ff00cc;
       cursor: pointer;
+      transition: 0.3s;
     }
     button:hover {
       background: #ff00cc;
@@ -59,15 +65,23 @@
       return JSON.parse(localStorage.getItem('userList')) || [];
     }
 
-    // กรณี localStorage ยังไม่มีผู้ใช้ -> สร้าง admin
-    if (!localStorage.getItem('userList')) {
-      const admin = [{
-        username: 'admin',
-        fullname: 'แอดมินระบบ',
-        role: 'ผู้ดูแล',
-        password: 'admin'
-      }];
-      localStorage.setItem('userList', JSON.stringify(admin));
+    function saveUsers(users) {
+      localStorage.setItem('userList', JSON.stringify(users));
+    }
+
+    // ✅ ให้แน่ใจว่ามี admin อยู่เสมอ
+    function ensureAdminUser() {
+      let users = loadUsers();
+      const adminExists = users.some(u => u.username === 'admin');
+      if (!adminExists) {
+        users.push({
+          username: 'admin',
+          fullname: 'แอดมินระบบ',
+          role: 'ผู้ดูแล',
+          password: 'admin'
+        });
+        saveUsers(users);
+      }
     }
 
     function login() {
@@ -78,12 +92,19 @@
       const found = users.find(user => user.username === u && user.password === p);
       if (found) {
         alert("ยินดีต้อนรับ " + found.fullname);
-        // ✅ ไปหน้าหลัก
+
+        // ✅ เซฟ currentUser เอาไว้ใช้ในหน้าต่าง ๆ
+        localStorage.setItem('currentUser', JSON.stringify(found));
+
+        // ไปหน้าหลัก
         window.location.href = "index.html";
       } else {
         alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
       }
     }
+
+    // เรียกเมื่อโหลดหน้า
+    window.addEventListener('DOMContentLoaded', ensureAdminUser);
   </script>
 </body>
 </html>
