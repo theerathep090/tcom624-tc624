@@ -1,242 +1,356 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>รายการของ - ระบบยืมของ</title>
-<style>
-  body {
-    font-family: 'Sarabun', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #000;
-    color: #fff;
-  }
-
-  header {
-    background: #111;
-    text-align: center;
-    padding: 15px;
-    font-size: 2rem;
-    color: #0ff;
-    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-  }
-
-  nav {
-    background: #111;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    gap: 15px;
-  }
-
-  nav a {
-    color: #f0f;
-    text-decoration: none;
-    font-weight: bold;
-    text-shadow: 0 0 5px #f0f;
-    transition: 0.3s;
-  }
-
-  nav a:hover {
-    color: #0f0;
-    text-shadow: 0 0 8px #0f0;
-  }
-
-  main {
-    padding: 20px;
-  }
-
-  h2 {
-    text-align: center;
-    color: #ff0;
-    text-shadow: 0 0 5px #ff0;
-    margin-bottom: 20px;
-  }
-
-  form {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  form input[type="text"], form input[type="number"] {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #0ff;
-    background: #111;
-    color: #fff;
-    text-shadow: 0 0 2px #0ff;
-  }
-
-  form button {
-    padding: 8px 12px;
-    border: 1px solid #f00;
-    background: #000;
-    color: #f00;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    text-shadow: 0 0 5px #f00;
-    transition: 0.3s;
-  }
-
-  form button:hover {
-    background: #f00;
-    color: #000;
-    text-shadow: 0 0 10px #f00;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-
-  th, td {
-    padding: 10px;
-    border: 1px solid #0ff;
-    text-align: center;
-  }
-
-  th {
-    background: #00f;
-    color: #fff;
-    text-shadow: 0 0 5px #00f;
-  }
-
-  .btn-delete {
-    padding: 5px 10px;
-    border: 1px solid #f00;
-    background: #000;
-    color: #f00;
-    border-radius: 4px;
-    cursor: pointer;
-    text-shadow: 0 0 5px #f00;
-  }
-
-  .btn-delete:hover {
-    background: #f00;
-    color: #000;
-    text-shadow: 0 0 10px #f00;
-  }
-
-  #noItems {
-    text-align: center;
-    margin-top: 20px;
-    color: #888;
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>รายการของ - ระบบยืมของ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #000;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      padding: 1rem 2rem;
+      text-align: center;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      text-shadow: 0 0 10px #fff;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      background: #111;
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 255, 255, 0.1);
+    }
+    nav a {
+      color: #00ffe7;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px #00ffe7;
+    }
+    nav a.active {
+      color: #fff;
+      text-shadow: 0 0 10px #00ffe7;
+      font-weight: bolder;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h2 {
+      text-align: center;
+      color: #00ffcc;
+      margin-bottom: 1rem;
+    }
+    form {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      background: #00ffe7;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00ccaa;
+      color: white;
+    }
+    #searchInput {
+      margin-bottom: 1rem;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+    th {
+      background-color: #00c6ff;
+      color: black;
+    }
+    .btn-delete {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-delete:hover {
+      background: #e60000;
+    }
+    #noItems {
+      text-align: center;
+      color: #ccc;
+      margin-top: 2rem;
+    }
+    .pagination {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .pagination button {
+      margin: 0 0.3rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+      form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      input[type="number"] {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>ระบบยืมของ</h1>
+  </header>
+  <nav>
+    <a href="index.html">หน้าหลัก</a>
+    <a href="borrow.html">ยืมของ</a>
+    <a href="return.html">คืนของ</a>
+    <a href="items.html" class="active">รายการของ</a>
+    <a href="history.html">ประวัติการยืม</a>
+  </nav>
+  <div class="container">
+    <h2>รายการของ</h2>
 
-<header>ระบบยืมของ RGB Neon</header>
-<nav>
-  <a href="index.html">หน้าแรก</a>
-  <a href="list.html">รายการของ</a>
-  <a href="borrow.html">ยืมของ</a>
-  <a href="return.html">คืนของ</a>
-  <a href="login.html">ออกจากระบบ</a>
-</nav>
+    <!-- ✅ ฟอร์มเพิ่มของ (เฉพาะแอดมินเห็น) -->
+    <form id="addItemForm" style="display:none;">
+      <input type="text" id="itemName" placeholder="ชื่อของ" required />
+      <input type="number" id="itemQuantity" placeholder="จำนวน" min="1" value="1" required />
+      <button type="submit">เพิ่มของ</button>
+    </form>
 
-<main>
-  <h2>รายการของทั้งหมด</h2>
+    <input type="text" id="searchInput" placeholder="ค้นหาชื่อของ..." />
+    <table id="itemTable">
+      <thead>
+        <tr>
+          <th>ชื่อของ</th>
+          <th>จำนวน</th>
+          <th id="manageHeader" style="display:none;">จัดการ</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="noItems" style="display:none;">ไม่มีรายการของ</div>
 
-  <form id="addItemForm">
-    <input type="text" id="itemName" placeholder="ชื่อของ" required>
-    <input type="number" id="itemQty" placeholder="จำนวน" required>
-    <button type="submit">เพิ่มของ</button>
-  </form>
+    <!-- ✅ Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </div>
+  <footer>
+    © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
+  </footer>
 
-  <div id="noItems">ยังไม่มีของในระบบ</div>
+  <script>
+    let user = null;
+    let currentPage = 1;
+    const itemsPerPage = 5;
 
-  <table id="itemTable" style="display:none;">
-    <thead>
-      <tr>
-        <th>ชื่อของ</th>
-        <th>จำนวน</th>
-        <th>จัดการ</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</main>
+    const addItemForm = document.getElementById('addItemForm');
+    const itemTable = document.getElementById('itemTable');
+    const noItems = document.getElementById('noItems');
+    const tbody = itemTable.querySelector('tbody');
+    const manageHeader = document.getElementById('manageHeader');
+    const paginationDiv = document.getElementById('pagination');
 
-<script>
-let user = null;
-const addItemForm = document.getElementById('addItemForm');
-const itemTable = document.getElementById('itemTable');
-const tbody = itemTable.querySelector('tbody');
-const noItems = document.getElementById('noItems');
-
-function loadItems() {
-  return JSON.parse(localStorage.getItem('itemList')) || [];
-}
-
-function saveItems(items) {
-  localStorage.setItem('itemList', JSON.stringify(items));
-}
-
-function renderItems() {
-  const items = loadItems();
-  tbody.innerHTML = '';
-  if (items.length === 0) {
-    itemTable.style.display = 'none';
-    noItems.style.display = 'block';
-    return;
-  }
-  noItems.style.display = 'none';
-  itemTable.style.display = 'table';
-
-  items.forEach((item, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.quantity}</td>
-      <td>${(user && user.role === "ผู้ดูแล") 
-            ? `<button class="btn-delete" onclick="deleteItem(${i})">ลบ</button>` 
-            : "-"}
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-window.deleteItem = function(index) {
-  const items = loadItems();
-  items.splice(index,1);
-  saveItems(items);
-  renderItems();
-}
-
-addItemForm.addEventListener('submit', e=>{
-  e.preventDefault();
-  const name = document.getElementById('itemName').value.trim();
-  const qty = parseInt(document.getElementById('itemQty').value);
-  if (!name || qty <= 0) return;
-  const items = loadItems();
-  items.push({name, quantity: qty});
-  saveItems(items);
-  renderItems();
-  addItemForm.reset();
-});
-
-window.addEventListener('DOMContentLoaded',()=>{
-  const userData = localStorage.getItem('currentUser');
-  if(!userData){
-    alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
-    window.location.href='login.html';
-  }else{
-    user = JSON.parse(userData);
-    renderItems();
-    if(user.role !== "ผู้ดูแล"){
-      addItemForm.style.display="none";
+    function initializeItems() {
+      let items = loadItems();
+      if (items.length === 0) {
+        items = [
+          { name: "ESP32 Smart Farm IoT Kit for Arduino & Scratch 3.0", quantity: 1 },
+          { name: "POWER SUPPLY (80+ BRONZE) 650 W ITSONAS DARK FOREST SFX", quantity: 1 },
+          { name: "เลเซอร์พอยเตอร์ LOGITECH R800 - BLACK", quantity: 1 },
+          { name: "2WD Smart Car Robot Chassis Kits", quantity: 7 },
+          { name: "Arduino UNO R3 - Made in italy", quantity: 7 },
+          { name: "Motor Drive Module L298N", quantity: 7 },
+          { name: "สาย Jumper Female to Male ยาว 20cm.", quantity: 6 },
+          { name: "สาย Jumper Male to Male ยาว 20cm.", quantity: 6 },
+          { name: "รางถ่านแบบ 18650 ใส่ถ่าน 2 ก้อน", quantity: 6 },
+          { name: "แบตเตอรี่ลิเธียม 18650 จำนวน 2 ก้อน", quantity: 6 }
+        ];
+        saveItems(items);
+      }
     }
-  }
-});
-</script>
 
+    function loadItems() {
+      return JSON.parse(localStorage.getItem('itemList')) || [];
+    }
+
+    function saveItems(items) {
+      localStorage.setItem('itemList', JSON.stringify(items));
+    }
+
+    function renderItems() {
+      const items = loadItems();
+      tbody.innerHTML = '';
+
+      if (items.length === 0) {
+        itemTable.style.display = 'none';
+        noItems.style.display = 'block';
+        return;
+      }
+
+      noItems.style.display = 'none';
+      itemTable.style.display = 'table';
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = items.slice(start, end);
+
+      pageItems.forEach((item, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.quantity}</td>
+          ${user && user.role === 'admin' ? `<td><button class="btn-delete" onclick="deleteItem(${start + i})">ลบ</button></td>` : ''}
+        `;
+        tbody.appendChild(tr);
+      });
+
+      renderPagination(items.length);
+    }
+
+    function renderPagination(totalItems) {
+      paginationDiv.innerHTML = '';
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      if (totalPages <= 1) return;
+
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = 'ก่อนหน้า';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => {
+        currentPage--;
+        renderItems();
+      };
+      paginationDiv.appendChild(prevBtn);
+
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = 'ถัดไป';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => {
+        currentPage++;
+        renderItems();
+      };
+      paginationDiv.appendChild(nextBtn);
+    }
+
+    function deleteItem(index) {
+      if (!confirm('ต้องการลบของชิ้นนี้?')) return;
+      let items = loadItems();
+      items.splice(index, 1);
+      saveItems(items);
+      renderItems();
+    }
+
+    addItemForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('itemName').value.trim();
+      const quantity = parseInt(document.getElementById('itemQuantity').value, 10);
+
+      if (!name) return alert('กรุณากรอกชื่อของ');
+      if (isNaN(quantity) || quantity < 1) return alert('กรุณากรอกจำนวนอย่างถูกต้อง (1 หรือมากกว่า)');
+
+      let items = loadItems();
+      const existingIndex = items.findIndex(i => i.name.toLowerCase() === name.toLowerCase());
+
+      if (existingIndex !== -1) {
+        items[existingIndex].quantity += quantity;
+      } else {
+        items.push({ name, quantity });
+      }
+      saveItems(items);
+      addItemForm.reset();
+      renderItems();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initializeItems();
+
+      const userData = localStorage.getItem('currentUser');
+      if (!userData) {
+        alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
+        window.location.href = 'login.html';
+      } else {
+        user = JSON.parse(userData);
+      }
+
+      // ✅ ถ้าเป็นแอดมิน ให้เห็นปุ่มเพิ่มของ + จัดการ
+      if (user && user.role === 'admin') {
+        addItemForm.style.display = 'flex';
+        manageHeader.style.display = 'table-cell';
+      } else {
+        addItemForm.style.display = 'none';
+        manageHeader.style.display = 'none';
+      }
+
+      renderItems();
+    });
+  </script>
 </body>
 </html>
