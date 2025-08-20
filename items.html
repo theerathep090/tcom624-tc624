@@ -180,6 +180,7 @@
   <header>
     <h1>ระบบยืมของ</h1>
   </header>
+
   <nav>
     <a href="index.html">หน้าหลัก</a>
     <a href="borrow.html">ยืมของ</a>
@@ -187,6 +188,7 @@
     <a href="items.html" class="active">รายการของ</a>
     <a href="history.html">ประวัติการยืม</a>
   </nav>
+
   <div class="container">
     <h2>รายการของ</h2>
     <form id="addItemForm">
@@ -194,7 +196,9 @@
       <input type="number" id="itemQuantity" placeholder="จำนวน" min="1" value="1" required />
       <button type="submit">เพิ่มของ</button>
     </form>
+
     <input type="text" id="searchInput" placeholder="ค้นหาชื่อของ..." />
+
     <table id="itemTable">
       <thead>
         <tr>
@@ -205,13 +209,16 @@
       </thead>
       <tbody></tbody>
     </table>
+
     <div id="noItems" style="display:none;">ไม่มีรายการของ</div>
+
     <div class="pagination">
       <button id="prevPage">ก่อนหน้า</button>
       <span id="pageInfo"></span>
       <button id="nextPage">ถัดไป</button>
     </div>
   </div>
+
   <footer>
     © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
   </footer>
@@ -234,8 +241,25 @@
       if (items.length === 0) {
         items = [
           { name: "ESP32 Smart Farm IoT Kit for Arduino & Scratch 3.0", quantity: 1 },
-          { name: "POWER SUPPLY (80+ BRONZE) 650 W ITSONAS DARK FOREST SFX", quantity: 1 }
-          // เพิ่มรายการเริ่มต้นตามต้องการ
+          { name: "POWER SUPPLY (80+ BRONZE) 650 W ITSONAS DARK FOREST SFX", quantity: 1 },
+          { name: "เลเซอร์พอยเตอร์ LOGITECH R800 - BLACK", quantity: 1 },
+          { name: "2WD Smart Car Robot Chassis Kits", quantity: 7 },
+          { name: "Arduino UNO R3 - Made in italy", quantity: 7 },
+          { name: "Motor Drive Module L298N", quantity: 7 },
+          { name: "สาย Jumper Female to Male ยาว 20cm.", quantity: 6 },
+          { name: "สาย Jumper Male to Male ยาว 20cm.", quantity: 6 },
+          { name: "รางถ่านแบบ 18650 ใส่ถ่าน 2 ก้อน", quantity: 6 },
+          { name: "แบตเตอรี่ลิเธียม 18650 จำนวน 2 ก้อน", quantity: 6 },
+          { name: "กล่องพลาสติกเก็บอุปกรณ์", quantity: 6 },
+          { name: "คู่มือโครงงาน IoT Smart Farm", quantity: 6 },
+          { name: "NODE MCU ESP8266", quantity: 10 },
+          { name: "สาย Micro USB", quantity: 10 },
+          { name: "เซนเซอร์วัดอุณหภูมิ DHT11", quantity: 10 },
+          { name: "เซนเซอร์วัดความชื้นในดิน", quantity: 10 },
+          { name: "Relay Module 1 Channel 5V", quantity: 10 },
+          { name: "สายจัมเปอร์ตัวเมีย-ตัวผู้", quantity: 10 },
+          { name: "สายจัมเปอร์ตัวผู้-ตัวผู้", quantity: 10 },
+          { name: "บอร์ดทดลอง Breadboard", quantity: 10 }
         ];
         saveItems(items);
       }
@@ -252,11 +276,13 @@
     function renderItems() {
       const items = loadItems();
       tbody.innerHTML = '';
+
       if (items.length === 0) {
         itemTable.style.display = 'none';
         noItems.style.display = 'block';
         return;
       }
+
       noItems.style.display = 'none';
       itemTable.style.display = 'table';
 
@@ -273,11 +299,7 @@
         tr.innerHTML = `
           <td>${item.name}</td>
           <td>${item.quantity}</td>
-          <td>${
-            user.role === 'ผู้ดูแล' 
-            ? `<button class="btn-delete" onclick="deleteItem(${start + i})">ลบ</button>` 
-            : '-'
-          }</td>
+          <td><button class="btn-delete" onclick="deleteItem(${start + i})">ลบ</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -288,7 +310,6 @@
     }
 
     function deleteItem(index) {
-      if (user.role !== 'ผู้ดูแล') return alert('เฉพาะแอดมินสามารถลบของได้');
       if (!confirm('ต้องการลบของชิ้นนี้?')) return;
       let items = loadItems();
       items.splice(index, 1);
@@ -298,10 +319,6 @@
 
     addItemForm.addEventListener('submit', e => {
       e.preventDefault();
-      if (user.role !== 'ผู้ดูแล') {
-        return alert('เฉพาะแอดมินสามารถเพิ่มของได้');
-      }
-
       const name = document.getElementById('itemName').value.trim();
       const quantityStr = document.getElementById('itemQuantity').value;
       const quantity = parseInt(quantityStr, 10);
@@ -317,11 +334,13 @@
       } else {
         items.push({ name, quantity });
       }
+
       saveItems(items);
       addItemForm.reset();
       renderItems();
     });
 
+    // ฟังก์ชันกรองข้อมูล
     document.getElementById('searchInput').addEventListener('input', function () {
       const filter = this.value.toLowerCase();
       const rows = tbody.getElementsByTagName('tr');
@@ -339,7 +358,6 @@
           }
         }
       }
-
       noItems.style.display = visible === 0 ? 'block' : 'none';
     });
 
@@ -354,6 +372,8 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
+      initializeItems();
+      renderItems();
       const userData = localStorage.getItem('currentUser');
       if (!userData) {
         alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
@@ -361,4 +381,7 @@
       } else {
         user = JSON.parse(userData);
       }
-      initializeItems();
+    });
+  </script>
+</body>
+</html>
