@@ -1,226 +1,242 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>รายการของ - ระบบยืมของ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"/>
-  <style>
-    body {
-      font-family: 'Sarabun', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8f9fa;
-      color: #333;
-    }
-    header {
-      background: #007bff;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    nav {
-      background: #0056b3;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    main {
-      padding: 20px;
-    }
-    h2 {
-      margin-bottom: 10px;
-      color: #007bff;
-    }
-    form {
-      margin-bottom: 20px;
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    form input, form button {
-      padding: 8px;
-      margin: 5px 0;
-    }
-    form input {
-      width: calc(50% - 12px);
-      margin-right: 10px;
-    }
-    form button {
-      background: #28a745;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 4px;
-      padding: 10px 15px;
-    }
-    form button:hover {
-      background: #218838;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background: #007bff;
-      color: #fff;
-    }
-    .btn-delete {
-      background: #dc3545;
-      color: #fff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn-delete:hover {
-      background: #c82333;
-    }
-    .no-items {
-      text-align: center;
-      color: #666;
-      margin-top: 20px;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายการของ - ระบบยืมของ</title>
+<style>
+  body {
+    font-family: 'Sarabun', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #000;
+    color: #fff;
+  }
+
+  header {
+    background: #111;
+    text-align: center;
+    padding: 15px;
+    font-size: 2rem;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+  }
+
+  nav {
+    background: #111;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  nav a {
+    color: #f0f;
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 0 0 5px #f0f;
+    transition: 0.3s;
+  }
+
+  nav a:hover {
+    color: #0f0;
+    text-shadow: 0 0 8px #0f0;
+  }
+
+  main {
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #ff0;
+    text-shadow: 0 0 5px #ff0;
+    margin-bottom: 20px;
+  }
+
+  form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  form input[type="text"], form input[type="number"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #0ff;
+    background: #111;
+    color: #fff;
+    text-shadow: 0 0 2px #0ff;
+  }
+
+  form button {
+    padding: 8px 12px;
+    border: 1px solid #f00;
+    background: #000;
+    color: #f00;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    text-shadow: 0 0 5px #f00;
+    transition: 0.3s;
+  }
+
+  form button:hover {
+    background: #f00;
+    color: #000;
+    text-shadow: 0 0 10px #f00;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #0ff;
+    text-align: center;
+  }
+
+  th {
+    background: #00f;
+    color: #fff;
+    text-shadow: 0 0 5px #00f;
+  }
+
+  .btn-delete {
+    padding: 5px 10px;
+    border: 1px solid #f00;
+    background: #000;
+    color: #f00;
+    border-radius: 4px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #f00;
+  }
+
+  .btn-delete:hover {
+    background: #f00;
+    color: #000;
+    text-shadow: 0 0 10px #f00;
+  }
+
+  #noItems {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+  }
+</style>
 </head>
 <body>
-  <header>ระบบยืมของ</header>
-  <nav>
-    <a href="index.html">หน้าแรก</a>
-    <a href="list.html">รายการของ</a>
-    <a href="borrow.html">ยืมของ</a>
-    <a href="return.html">คืนของ</a>
-    <a href="login.html">ออกจากระบบ</a>
-  </nav>
-  <main>
-    <h2>รายการของทั้งหมด</h2>
 
-    <form id="addItemForm">
-      <input type="text" id="itemName" placeholder="ชื่อของ" required>
-      <input type="number" id="itemQty" placeholder="จำนวน" required>
-      <button type="submit">เพิ่มของ</button>
-    </form>
+<header>ระบบยืมของ RGB Neon</header>
+<nav>
+  <a href="index.html">หน้าแรก</a>
+  <a href="list.html">รายการของ</a>
+  <a href="borrow.html">ยืมของ</a>
+  <a href="return.html">คืนของ</a>
+  <a href="login.html">ออกจากระบบ</a>
+</nav>
 
-    <div id="noItems" class="no-items">ยังไม่มีของในระบบ</div>
+<main>
+  <h2>รายการของทั้งหมด</h2>
 
-    <table id="itemTable" style="display:none;">
-      <thead>
-        <tr>
-          <th>ชื่อของ</th>
-          <th>จำนวน</th>
-          <th>จัดการ</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </main>
+  <form id="addItemForm">
+    <input type="text" id="itemName" placeholder="ชื่อของ" required>
+    <input type="number" id="itemQty" placeholder="จำนวน" required>
+    <button type="submit">เพิ่มของ</button>
+  </form>
 
-  <script>
-    let user = null;
-    const addItemForm = document.getElementById('addItemForm');
-    const itemTable = document.getElementById('itemTable');
-    const noItems = document.getElementById('noItems');
-    const tbody = itemTable.querySelector('tbody');
+  <div id="noItems">ยังไม่มีของในระบบ</div>
 
-    function loadItems() {
-      return JSON.parse(localStorage.getItem('itemList')) || [];
+  <table id="itemTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>ชื่อของ</th>
+        <th>จำนวน</th>
+        <th>จัดการ</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<script>
+let user = null;
+const addItemForm = document.getElementById('addItemForm');
+const itemTable = document.getElementById('itemTable');
+const tbody = itemTable.querySelector('tbody');
+const noItems = document.getElementById('noItems');
+
+function loadItems() {
+  return JSON.parse(localStorage.getItem('itemList')) || [];
+}
+
+function saveItems(items) {
+  localStorage.setItem('itemList', JSON.stringify(items));
+}
+
+function renderItems() {
+  const items = loadItems();
+  tbody.innerHTML = '';
+  if (items.length === 0) {
+    itemTable.style.display = 'none';
+    noItems.style.display = 'block';
+    return;
+  }
+  noItems.style.display = 'none';
+  itemTable.style.display = 'table';
+
+  items.forEach((item, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.quantity}</td>
+      <td>${(user && user.role === "ผู้ดูแล") 
+            ? `<button class="btn-delete" onclick="deleteItem(${i})">ลบ</button>` 
+            : "-"}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+window.deleteItem = function(index) {
+  const items = loadItems();
+  items.splice(index,1);
+  saveItems(items);
+  renderItems();
+}
+
+addItemForm.addEventListener('submit', e=>{
+  e.preventDefault();
+  const name = document.getElementById('itemName').value.trim();
+  const qty = parseInt(document.getElementById('itemQty').value);
+  if (!name || qty <= 0) return;
+  const items = loadItems();
+  items.push({name, quantity: qty});
+  saveItems(items);
+  renderItems();
+  addItemForm.reset();
+});
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const userData = localStorage.getItem('currentUser');
+  if(!userData){
+    alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
+    window.location.href='login.html';
+  }else{
+    user = JSON.parse(userData);
+    renderItems();
+    if(user.role !== "ผู้ดูแล"){
+      addItemForm.style.display="none";
     }
+  }
+});
+</script>
 
-    function saveItems(items) {
-      localStorage.setItem('itemList', JSON.stringify(items));
-    }
-
-    function initializeItems() {
-      if (!localStorage.getItem('itemList')) {
-        localStorage.setItem('itemList', JSON.stringify([]));
-      }
-    }
-
-    function renderItems() {
-      const items = loadItems();
-      tbody.innerHTML = '';
-      if (items.length === 0) {
-        itemTable.style.display = 'none';
-        noItems.style.display = 'block';
-        return;
-      }
-      noItems.style.display = 'none';
-      itemTable.style.display = 'table';
-
-      items.forEach((item, i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.name}</td>
-          <td>${item.quantity}</td>
-          <td>
-            ${(user && user.role === "ผู้ดูแล") 
-              ? `<button class="btn-delete" onclick="deleteItem(${i})">ลบ</button>` 
-              : "-"}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ✅ ผูกกับ window ให้ใช้งานได้จริง
-    window.deleteItem = function(index) {
-      const items = loadItems();
-      items.splice(index, 1);
-      saveItems(items);
-      renderItems();
-    }
-
-    addItemForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('itemName').value.trim();
-      const qty = parseInt(document.getElementById('itemQty').value);
-
-      if (!name || qty <= 0) return;
-
-      const items = loadItems();
-      items.push({ name, quantity: qty });
-      saveItems(items);
-      renderItems();
-
-      addItemForm.reset();
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      initializeItems();
-      const userData = localStorage.getItem('currentUser');
-      if (!userData) {
-        alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
-        window.location.href = 'login.html';
-      } else {
-        user = JSON.parse(userData);
-        renderItems();
-
-        if (user.role !== "ผู้ดูแล") {
-          addItemForm.style.display = "none";
-        }
-      }
-    });
-  </script>
 </body>
 </html>
