@@ -41,6 +41,13 @@
     .delete-btn { background: #ff3333; color: #fff; }
     .save-btn { background: #00cc66; color: #fff; }
     .cancel-btn { background: #666; color: #fff; }
+    input[type="text"], select {
+      width: 90%;
+      padding: 0.2rem;
+      border-radius: 3px;
+      border: 1px solid #888;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -59,14 +66,17 @@
   </table>
 
   <script>
+    // โหลดข้อมูลผู้ใช้จาก localStorage
     function loadUsers() {
       return JSON.parse(localStorage.getItem('userList')) || [];
     }
 
+    // บันทึกข้อมูลผู้ใช้กลับ localStorage
     function saveUsers(users) {
       localStorage.setItem('userList', JSON.stringify(users));
     }
 
+    // แสดงตารางผู้ใช้
     function renderUsers() {
       const tbody = document.getElementById('userTable');
       const users = loadUsers();
@@ -74,8 +84,6 @@
 
       users.forEach((u, i) => {
         const tr = document.createElement('tr');
-
-        // แถวปกติ
         tr.innerHTML = `
           <td>${u.username}</td>
           <td>${u.fullname}</td>
@@ -90,10 +98,11 @@
       });
     }
 
+    // แก้ไขผู้ใช้
     function editUser(index) {
       const users = loadUsers();
       const u = users[index];
-      const tr = document.getElementById('userTable').children[index];
+      const tr = document.querySelectorAll('#userTable tr')[index];
 
       tr.innerHTML = `
         <td><input id="edit-username" value="${u.username}" ${u.username === 'admin' ? 'disabled' : ''}></td>
@@ -104,7 +113,7 @@
             <option value="ผู้ดูแล" ${u.role === 'ผู้ดูแล' ? 'selected' : ''}>ผู้ดูแล</option>
           </select>
         </td>
-        <td><input id="edit-password" type="text" value="${u.password}"></td>
+        <td><input id="edit-password" type="text" value="${u.password || ''}"></td>
         <td>
           <button class="save-btn" onclick="saveEdit(${index})">บันทึก</button>
           <button class="cancel-btn" onclick="renderUsers()">ยกเลิก</button>
@@ -112,6 +121,7 @@
       `;
     }
 
+    // บันทึกการแก้ไข
     function saveEdit(index) {
       const users = loadUsers();
       users[index] = {
@@ -124,6 +134,7 @@
       renderUsers();
     }
 
+    // ลบผู้ใช้
     function deleteUser(index) {
       const users = loadUsers();
       if (users[index].username === "admin") {
@@ -137,6 +148,7 @@
       }
     }
 
+    // โหลดเมื่อเปิดหน้า
     window.addEventListener('DOMContentLoaded', renderUsers);
   </script>
 </body>
