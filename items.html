@@ -137,6 +137,24 @@
       color: #ccc;
       margin-top: 2rem;
     }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      gap: 0.5rem;
+    }
+    .pagination button {
+      background: #0072ff;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .pagination button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
     footer {
       text-align: center;
       padding: 2rem 1rem;
@@ -188,6 +206,11 @@
       <tbody></tbody>
     </table>
     <div id="noItems" style="display:none;">ไม่มีรายการของ</div>
+    <div class="pagination">
+      <button id="prevPage">ก่อนหน้า</button>
+      <span id="pageInfo"></span>
+      <button id="nextPage">ถัดไป</button>
+    </div>
   </div>
   <footer>
     © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
@@ -199,6 +222,12 @@
     const itemTable = document.getElementById('itemTable');
     const noItems = document.getElementById('noItems');
     const tbody = itemTable.querySelector('tbody');
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    const pageInfo = document.getElementById('pageInfo');
+
+    let currentPage = 1;
+    const itemsPerPage = 10;
 
     function initializeItems() {
       let items = loadItems();
@@ -247,15 +276,28 @@
       }
       noItems.style.display = 'none';
       itemTable.style.display = 'table';
-      items.forEach((item, i) => {
+
+      const totalPages = Math.ceil(items.length / itemsPerPage);
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = items.slice(start, end);
+
+      pageItems.forEach((item, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${item.name}</td>
           <td>${item.quantity}</td>
-          <td><button class="btn-delete" onclick="deleteItem(${i})">ลบ</button></td>
+          <td><button class="btn-delete" onclick="deleteItem(${start + i})">ลบ</button></td>
         `;
         tbody.appendChild(tr);
       });
+
+      pageInfo.textContent = `หน้า ${currentPage} / ${totalPages}`;
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
     }
 
     function deleteItem(index) {
@@ -310,39 +352,15 @@
       noItems.style.display = visible === 0 ? 'block' : 'none';
     });
 
-    function reduceItemQuantity(itemName, amount = 1) {
-      let items = loadItems();
-      const index = items.findIndex(i => i.name.toLowerCase() === itemName.toLowerCase());
-      if (index !== -1) {
-        if (items[index].quantity >= amount) {
-          items[index].quantity -= amount;
-          saveItems(items);
-          renderItems();
-          return true;
-        } else {
-          alert(`ของ "${itemName}" ไม่พอในคลัง`);
-          return false;
-        }
-      } else {
-        alert(`ไม่พบของ "${itemName}" ในคลัง`);
-        return false;
-      }
-    }
-
-    function increaseItemQuantity(itemName, amount = 1) {
-      let items = loadItems();
-      const index = items.findIndex(i => i.name.toLowerCase() === itemName.toLowerCase());
-      if (index !== -1) {
-        items[index].quantity += amount;
-      } else {
-        items.push({name: itemName, quantity: amount});
-      }
-      saveItems(items);
+    prevBtn.addEventListener('click', () => {
+      currentPage--;
       renderItems();
-    }
+    });
 
-    window.reduceItemQuantity = reduceItemQuantity;
-    window.increaseItemQuantity = increaseItemQuantity;
+    nextBtn.addEventListener('click', () => {
+      currentPage++;
+      renderItems();
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
       initializeItems();
