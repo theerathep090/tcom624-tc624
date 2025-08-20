@@ -180,7 +180,6 @@
   <header>
     <h1>ระบบยืมของ</h1>
   </header>
-
   <nav>
     <a href="index.html">หน้าหลัก</a>
     <a href="borrow.html">ยืมของ</a>
@@ -188,7 +187,6 @@
     <a href="items.html" class="active">รายการของ</a>
     <a href="history.html">ประวัติการยืม</a>
   </nav>
-
   <div class="container">
     <h2>รายการของ</h2>
     <form id="addItemForm">
@@ -196,9 +194,7 @@
       <input type="number" id="itemQuantity" placeholder="จำนวน" min="1" value="1" required />
       <button type="submit">เพิ่มของ</button>
     </form>
-
     <input type="text" id="searchInput" placeholder="ค้นหาชื่อของ..." />
-
     <table id="itemTable">
       <thead>
         <tr>
@@ -209,16 +205,13 @@
       </thead>
       <tbody></tbody>
     </table>
-
     <div id="noItems" style="display:none;">ไม่มีรายการของ</div>
-
     <div class="pagination">
       <button id="prevPage">ก่อนหน้า</button>
       <span id="pageInfo"></span>
       <button id="nextPage">ถัดไป</button>
     </div>
   </div>
-
   <footer>
     © 2025 ระบบยืมของ วิทยาลัยเทคนิคของเรา
   </footer>
@@ -276,13 +269,11 @@
     function renderItems() {
       const items = loadItems();
       tbody.innerHTML = '';
-
       if (items.length === 0) {
         itemTable.style.display = 'none';
         noItems.style.display = 'block';
         return;
       }
-
       noItems.style.display = 'none';
       itemTable.style.display = 'table';
 
@@ -334,7 +325,6 @@
       } else {
         items.push({ name, quantity });
       }
-
       saveItems(items);
       addItemForm.reset();
       renderItems();
@@ -358,6 +348,7 @@
           }
         }
       }
+
       noItems.style.display = visible === 0 ? 'block' : 'none';
     });
 
@@ -374,6 +365,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       initializeItems();
       renderItems();
+
       const userData = localStorage.getItem('currentUser');
       if (!userData) {
         alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
