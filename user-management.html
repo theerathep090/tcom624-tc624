@@ -62,10 +62,10 @@
     // กรณี localStorage ยังไม่มีผู้ใช้ -> สร้าง admin
     if (!localStorage.getItem('userList')) {
       const admin = [{
-        username: 'admin624',
+        username: 'admin',
         fullname: 'แอดมินระบบ',
         role: 'ผู้ดูแล',
-        password: 'admin123'
+        password: 'admin'
       }];
       localStorage.setItem('userList', JSON.stringify(admin));
     }
