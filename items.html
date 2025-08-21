@@ -189,6 +189,7 @@
   </nav>
   <div class="container">
     <h2>รายการของ</h2>
+    <!-- form เพิ่มของ (ซ่อนถ้าไม่ใช่แอดมิน) -->
     <form id="addItemForm">
       <input type="text" id="itemName" placeholder="ชื่อของ" required />
       <input type="number" id="itemQuantity" placeholder="จำนวน" min="1" value="1" required />
@@ -290,7 +291,7 @@
         tr.innerHTML = `
           <td>${item.name}</td>
           <td>${item.quantity}</td>
-          <td><button class="btn-delete" onclick="deleteItem(${start + i})">ลบ</button></td>
+          <td>${user && user.role === "ผู้ดูแล" ? `<button class="btn-delete" onclick="deleteItem(${start + i})">ลบ</button>` : `-`}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -301,6 +302,7 @@
     }
 
     function deleteItem(index) {
+      if (user.role !== "ผู้ดูแล") return alert("คุณไม่มีสิทธิ์ลบ");
       if (!confirm('ต้องการลบของชิ้นนี้?')) return;
       let items = loadItems();
       items.splice(index, 1);
@@ -310,6 +312,8 @@
 
     addItemForm.addEventListener('submit', e => {
       e.preventDefault();
+      if (user.role !== "ผู้ดูแล") return alert("คุณไม่มีสิทธิ์เพิ่มของ");
+
       const name = document.getElementById('itemName').value.trim();
       const quantityStr = document.getElementById('itemQuantity').value;
       const quantity = parseInt(quantityStr, 10);
@@ -364,7 +368,6 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       initializeItems();
-      renderItems();
 
       const userData = localStorage.getItem('currentUser');
       if (!userData) {
@@ -372,7 +375,14 @@
         window.location.href = 'login.html';
       } else {
         user = JSON.parse(userData);
+
+        // ถ้าไม่ใช่แอดมิน -> ซ่อนฟอร์มเพิ่มของ
+        if (user.role !== "ผู้ดูแล") {
+          addItemForm.style.display = "none";
+        }
       }
+
+      renderItems();
     });
   </script>
 </body>
