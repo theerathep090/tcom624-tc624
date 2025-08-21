@@ -48,22 +48,34 @@
       border: 1px solid #888;
       text-align: center;
     }
+    .denied {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 1.2rem;
+      color: #ff4444;
+    }
   </style>
 </head>
 <body>
   <h2>จัดการผู้ใช้</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>ชื่อผู้ใช้</th>
-        <th>ชื่อ-นามสกุล</th>
-        <th>บทบาท</th>
-        <th>รหัสผ่าน</th>
-        <th>การจัดการ</th>
-      </tr>
-    </thead>
-    <tbody id="userTable"></tbody>
-  </table>
+  <div id="adminPage">
+    <table>
+      <thead>
+        <tr>
+          <th>ชื่อผู้ใช้</th>
+          <th>ชื่อ-นามสกุล</th>
+          <th>บทบาท</th>
+          <th>รหัสผ่าน</th>
+          <th>การจัดการ</th>
+        </tr>
+      </thead>
+      <tbody id="userTable"></tbody>
+    </table>
+  </div>
+
+  <div id="denied" class="denied" style="display:none;">
+    🚫 คุณไม่มีสิทธิ์เข้าหน้านี้
+  </div>
 
   <script>
     // โหลดข้อมูลผู้ใช้จาก localStorage
@@ -76,8 +88,35 @@
       localStorage.setItem('userList', JSON.stringify(users));
     }
 
+    // ถ้ายังไม่มี admin ให้สร้างไว้
+    function ensureAdminExists() {
+      let users = loadUsers();
+      const hasAdmin = users.some(u => u.username === "admin");
+      if (!hasAdmin) {
+        users.push({
+          username: "admin",
+          fullname: "ผู้ดูแลระบบ",
+          role: "ผู้ดูแล",
+          password: "admin"
+        });
+        saveUsers(users);
+      }
+    }
+
+    // ตรวจสอบสิทธิ์ว่าเป็น admin หรือไม่
+    function checkAccess() {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser")); 
+      if (!currentUser || currentUser.role !== "ผู้ดูแล") {
+        document.getElementById("adminPage").style.display = "none";
+        document.getElementById("denied").style.display = "block";
+        return false;
+      }
+      return true;
+    }
+
     // แสดงตารางผู้ใช้
     function renderUsers() {
+      if (!checkAccess()) return;
       const tbody = document.getElementById('userTable');
       const users = loadUsers();
       tbody.innerHTML = "";
@@ -149,7 +188,10 @@
     }
 
     // โหลดเมื่อเปิดหน้า
-    window.addEventListener('DOMContentLoaded', renderUsers);
+    window.addEventListener('DOMContentLoaded', () => {
+      ensureAdminExists(); // สร้าง admin ถ้ายังไม่มี
+      renderUsers();
+    });
   </script>
 </body>
 </html>
