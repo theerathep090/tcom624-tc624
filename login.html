@@ -197,6 +197,23 @@
   </div>
 
   <script>
+    // ฟังก์ชันสร้าง admin ถ้ายังไม่มี
+    function ensureAdminExists() {
+      let users = JSON.parse(localStorage.getItem("userList")) || [];
+      const hasAdmin = users.some(u => u.username === "admin");
+      if (!hasAdmin) {
+        users.push({
+          username: "admin",
+          fullname: "ผู้ดูแลระบบ",
+          role: "ผู้ดูแล",
+          password: "admin"
+        });
+        localStorage.setItem("userList", JSON.stringify(users));
+      }
+    }
+
+    ensureAdminExists(); // เรียกตอนโหลดหน้า
+
     // toggle แสดง/ซ่อนรหัสผ่าน
     document.getElementById('togglePassword').addEventListener('click', function () {
       const passwordInput = document.getElementById('password');
@@ -216,7 +233,12 @@
 
       if (user) {
         localStorage.setItem('currentUser', JSON.stringify(user));
-        window.location.href = 'index.html';
+        // ถ้าเป็น admin → ไปหน้า admin.html
+        if (user.role === "ผู้ดูแล") {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'index.html';
+        }
       } else {
         errorMsg.innerText = '❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
       }
