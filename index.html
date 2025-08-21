@@ -22,66 +22,6 @@
       overflow-x: hidden;
     }
 
-    /* Neon border animation container */
-    body::before, body::after {
-      content: "";
-      position: fixed;
-      pointer-events: none;
-      border: 3px solid transparent;
-      border-radius: 10px;
-      width: calc(100vw - 20px);
-      height: calc(100vh - 20px);
-      top: 10px;
-      left: 10px;
-      box-sizing: border-box;
-      z-index: 9999;
-      animation: neon-border 4s linear infinite;
-    }
-
-    body::after {
-      border-color: #8a72c7;
-      animation-delay: 2s;
-      filter: drop-shadow(0 0 10px #8a72c7);
-    }
-
-    body::before {
-      border-color: #00fff7;
-      filter: drop-shadow(0 0 10px #00fff7);
-    }
-
-    @keyframes neon-border {
-      0% {
-        border-top-color: #8a72c7;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
-      }
-      25% {
-        border-top-color: transparent;
-        border-right-color: #8a72c7;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
-      }
-      50% {
-        border-top-color: transparent;
-        border-right-color: transparent;
-        border-bottom-color: #8a72c7;
-        border-left-color: transparent;
-      }
-      75% {
-        border-top-color: transparent;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
-        border-left-color: #8a72c7;
-      }
-      100% {
-        border-top-color: #8a72c7;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
-      }
-    }
-
     /* Layout and style */
     .top-bar {
       background: #1f1436;
@@ -328,7 +268,7 @@
   <div class="top-bar">
     <div class="contact">
       <span>☎ 0********</span>
-      <span>✉ pbntc.ac.th</pbntc></span>
+      <span>✉ pbntc.ac.th</span>
     </div>
     <button id="logoutBtn">ออกจากระบบ</button>
   </div>
