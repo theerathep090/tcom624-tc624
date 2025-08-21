@@ -6,7 +6,6 @@
   <title>ยืมของ - ระบบยืมของ</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet">
   <style>
-    /* (ใช้ CSS เหมือนเดิม ไม่เปลี่ยน) */
     * {
       box-sizing: border-box;
       font-family: 'Sarabun', sans-serif;
@@ -90,33 +89,6 @@
       color: #888;
       font-size: 0.9rem;
     }
-    body::before, body::after {
-      content: "";
-      position: fixed;
-      pointer-events: none;
-      border: 3px solid transparent;
-      border-radius: 10px;
-      width: calc(100vw - 20px);
-      height: calc(100vh - 20px);
-      top: 10px;
-      left: 10px;
-      box-sizing: border-box;
-      z-index: 9999;
-      animation: neon-border 4s linear infinite;
-    }
-    body::after {
-      border-color: #00ffff;
-      animation-delay: 2s;
-      filter: drop-shadow(0 0 10px #00ffff);
-    }
-    body::before {
-      border-color: #00ffff;
-      filter: drop-shadow(0 0 10px #00ffff);
-    }
-    @keyframes neon-border {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
   </style>
 </head>
 <body>
@@ -149,7 +121,6 @@
   </footer>
 
   <script>
-    // โหลดข้อมูลผู้ใช้จาก localStorage
     const userData = localStorage.getItem('currentUser');
     if (!userData) {
       alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
@@ -158,40 +129,31 @@
     const user = JSON.parse(userData);
     document.getElementById('borrower').value = user.username || '';
 
-    // โหลดรายการของ
     function loadItems() {
       return JSON.parse(localStorage.getItem('itemList')) || [];
     }
-    // บันทึกรายการของ
     function saveItems(items) {
       localStorage.setItem('itemList', JSON.stringify(items));
     }
-
-    // ลดจำนวนของในคลัง itemList ตามชื่อของที่ยืม
     function reduceItemQuantity(itemName, amount = 1) {
       const items = loadItems();
       const index = items.findIndex(i => i.name.toLowerCase() === itemName.toLowerCase());
-      if (index === -1) return false; // ไม่พบของ
-      if (items[index].quantity < amount) return false; // จำนวนไม่พอ
+      if (index === -1) return false;
+      if (items[index].quantity < amount) return false;
       items[index].quantity -= amount;
       saveItems(items);
       return true;
     }
 
-    // โหลดประวัติการยืม
     function loadHistory() {
       return JSON.parse(localStorage.getItem('historyList')) || [];
     }
-    // บันทึกประวัติการยืม
     function saveHistory(history) {
       localStorage.setItem('historyList', JSON.stringify(history));
     }
-
-    // โหลดรายการยืมปัจจุบัน (ถ้าจำเป็น)
     function loadBorrowList() {
       return JSON.parse(localStorage.getItem('borrowList')) || [];
     }
-    // บันทึกรายการยืมปัจจุบัน
     function saveBorrowList(list) {
       localStorage.setItem('borrowList', JSON.stringify(list));
     }
@@ -199,7 +161,6 @@
     const form = document.getElementById('borrowForm');
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-
       const borrower = document.getElementById('borrower').value.trim();
       const item = document.getElementById('item').value.trim();
       const date = new Date().toLocaleString('th-TH', { hour12: false });
@@ -209,19 +170,16 @@
         return;
       }
 
-      // ลดจำนวนของในคลัง
       const success = reduceItemQuantity(item, 1);
       if (!success) {
         alert("ไม่สามารถยืมของได้ เนื่องจากจำนวนของไม่เพียงพอหรือไม่มีรายการนี้");
         return;
       }
 
-      // บันทึกรายการยืม
       const borrowList = loadBorrowList();
       borrowList.push({ borrower, item, date });
       saveBorrowList(borrowList);
 
-      // บันทึกประวัติการยืม
       const history = loadHistory();
       history.push({ borrower, item, borrowDate: date, returnDate: null });
       saveHistory(history);
