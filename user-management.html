@@ -74,7 +74,7 @@
   </div>
 
   <div id="denied" class="denied" style="display:none;">
-    🚫 คุณไม่มีสิทธิ์เข้าหน้านี้
+    🚫 คุณไม่มีสิทธิ์เข้าหน้านี้ กรุณาล็อกอินเป็นผู้ดูแลระบบ
   </div>
 
   <script>
@@ -83,16 +83,14 @@
       return JSON.parse(localStorage.getItem('userList')) || [];
     }
 
-    // บันทึกข้อมูลผู้ใช้กลับ localStorage
     function saveUsers(users) {
       localStorage.setItem('userList', JSON.stringify(users));
     }
 
-    // ถ้ายังไม่มี admin ให้สร้างไว้
+    // สร้าง admin ถ้ายังไม่มี
     function ensureAdminExists() {
       let users = loadUsers();
-      const hasAdmin = users.some(u => u.username === "admin");
-      if (!hasAdmin) {
+      if (!users.some(u => u.username === "admin")) {
         users.push({
           username: "admin",
           fullname: "ผู้ดูแลระบบ",
@@ -103,10 +101,10 @@
       }
     }
 
-    // ตรวจสอบสิทธิ์ว่าเป็น admin หรือไม่
+    // ตรวจสอบสิทธิ์ว่าล็อกอินเป็น admin
     function checkAccess() {
-      const currentUser = JSON.parse(localStorage.getItem("currentUser")); 
-      if (!currentUser || currentUser.role !== "ผู้ดูแล") {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser || currentUser.username !== "admin") {
         document.getElementById("adminPage").style.display = "none";
         document.getElementById("denied").style.display = "block";
         return false;
@@ -114,7 +112,7 @@
       return true;
     }
 
-    // แสดงตารางผู้ใช้
+    // แสดงผู้ใช้
     function renderUsers() {
       if (!checkAccess()) return;
       const tbody = document.getElementById('userTable');
@@ -137,7 +135,6 @@
       });
     }
 
-    // แก้ไขผู้ใช้
     function editUser(index) {
       const users = loadUsers();
       const u = users[index];
@@ -160,7 +157,6 @@
       `;
     }
 
-    // บันทึกการแก้ไข
     function saveEdit(index) {
       const users = loadUsers();
       users[index] = {
@@ -173,7 +169,6 @@
       renderUsers();
     }
 
-    // ลบผู้ใช้
     function deleteUser(index) {
       const users = loadUsers();
       if (users[index].username === "admin") {
@@ -187,9 +182,8 @@
       }
     }
 
-    // โหลดเมื่อเปิดหน้า
     window.addEventListener('DOMContentLoaded', () => {
-      ensureAdminExists(); // สร้าง admin ถ้ายังไม่มี
+      ensureAdminExists();
       renderUsers();
     });
   </script>
